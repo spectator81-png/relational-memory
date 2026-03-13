@@ -44,7 +44,7 @@ class LLMClient:
                     model: str | None = None) -> Generator[str, None, str]:
         """Stream chat responses. Yields text chunks, returns full response."""
         if self.provider == "anthropic":
-            return self._anthropic_stream(system, messages, model or "claude-haiku-4-5-20251001")
+            return self._anthropic_stream(system, messages, model or "claude-opus-4-6")
         elif self.provider == "openai":
             return self._openai_stream(system, messages, model or "gpt-4o")
 

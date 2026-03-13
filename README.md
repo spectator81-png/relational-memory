@@ -55,7 +55,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 relational-memory
 ```
 
-Runs on **Claude Haiku** — the smallest, cheapest Claude model. The effect comes from the memory architecture, not model size.
+Chat uses **Claude Opus** by default. Signal extraction and sleep-time condensation use **Haiku** (cheap, fast). You can switch the chat model via `LLMClient` or use `--provider openai` for GPT-4o.
 
 Chat for a few sessions. After ~2 sessions the tone starts adapting. After 5, the bot generates narrative layers (a distilled portrait, behavioral patterns, relationship turning points) and the difference becomes obvious.
 
