@@ -68,6 +68,16 @@ relational-memory --provider openai # use GPT-4o instead
 
 For OpenAI provider: `pip install openai`. No other dependencies.
 
+## What Happens Over Time
+
+**Session 1:** You chat normally. When you exit, the system silently extracts 7 relational signals from the conversation — how formal were you, how deep did it get, did you push back? Your relationship vector starts moving from neutral (all 0.5) toward your actual style.
+
+**Sessions 2-4:** Each session shifts the vector further. The bot already adapts — if you're consistently informal, it loosens up. If you handle disagreement well, it gets more direct. You'll notice the tone changing.
+
+**Session 5:** The sleep-time agent runs automatically. It reads the full signal history and generates three narrative layers: a portrait of who you are, behavioral if-then patterns it's learned, and key moments that shaped the relationship. These are stored as markdown files you can read and edit.
+
+**Session 6+:** The bot now has both the vector AND the narrative context. It doesn't just know you're informal (formality: 0.36) — it knows that "when AI gets intellectually shallow, you push back with sharper questions" and that "you show vulnerability without treating it as weakness." That's what makes the difference in the [A/B test](docs/ab_test.md).
+
 ## How It Works
 
 ```
