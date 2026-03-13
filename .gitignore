@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Private data — never commit
+test_conversations/
+AB_TEST_RAW.md
+AB_TEST_PUBLIC.md
+SESSION_LOG.md
+SIGNAL_EXTRACTION_TEST.md
+KALIBRIERUNG_ERKENNTNISSE.md
+REDDIT_SNIPPETS.md
+
+# Internal dev docs (content lives in README now)
+PROTOTYPE.md
+
+# Old file locations (moved into package)
+/prompts/
+chat.py
+extract_signals.py
+
+# Research docs (live in parent directory)
+RESEARCH*.md
+RELATIONAL_MEMORY.md
+ZWEITE_MEINUNG*.md
+RESEARCH_OPEN.md
+
+# Runtime data
+.relational_memory/
+
+# IDE
+.vscode/
+.idea/
