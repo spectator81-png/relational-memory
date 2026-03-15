@@ -188,7 +188,7 @@ Runtime data is stored in `~/.relational_memory/<user_id>/`.
 
 ## License
 
-MIT
+[Big Time Public License 2.0.1](https://bigtimelicense.com/versions/2.0.1) — free for personal, educational, non-commercial use and small businesses (<20 employees, <$1M revenue). Commercial use by larger companies requires a separate license — contact florian@keusch.wien.
 
 ---
 
