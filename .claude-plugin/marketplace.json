@@ -1,0 +1,26 @@
+{
+  "name": "relational-memory-plugins",
+  "owner": {
+    "name": "Florian Keusch",
+    "email": "florian@keusch.wien"
+  },
+  "metadata": {
+    "description": "Relationship-aware memory for Claude Code",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "relational-memory",
+      "source": "./plugin",
+      "description": "Tracks communication style across sessions using a 7D relational vector. Auto-extracts signals, builds memory layers, adapts tone over time.",
+      "version": "1.2.0",
+      "author": {
+        "name": "Florian Keusch"
+      },
+      "homepage": "https://github.com/spectator81-png/relational-memory",
+      "repository": "https://github.com/spectator81-png/relational-memory",
+      "license": "Big Time Public License 2.0.1",
+      "keywords": ["memory", "relational", "vector", "personality", "claude-code"]
+    }
+  ]
+}
