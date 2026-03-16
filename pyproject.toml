@@ -4,22 +4,44 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "relational-memory"
-version = "0.1.0"
-description = "A relationship-aware memory layer for LLM chatbots"
+version = "2.1.0"
+description = "A relationship-aware memory layer for LLM chatbots — models the relationship, not just facts"
 requires-python = ">=3.10"
-license = "MIT"
-authors = [{name = "Florian Keusch"}]
+license = {file = "LICENSE"}
+authors = [{name = "Florian Keusch", email = "florian@keusch.wien"}]
 readme = "README.md"
-dependencies = ["anthropic>=0.20.0"]
+keywords = [
+    "llm", "memory", "relationship", "chatbot", "ai",
+    "sycophancy", "ema", "personality", "context",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent",
+]
+dependencies = []
 
 [project.optional-dependencies]
+anthropic = ["anthropic>=0.20.0"]
 openai = ["openai>=1.0.0"]
+google = ["google-genai>=1.0.0"]
+all = ["anthropic>=0.20.0", "openai>=1.0.0", "google-genai>=1.0.0"]
 
 [project.scripts]
 relational-memory = "relational_memory.__main__:main"
 
 [project.urls]
 Homepage = "https://github.com/spectator81-png/relational-memory"
+Repository = "https://github.com/spectator81-png/relational-memory"
+Issues = "https://github.com/spectator81-png/relational-memory/issues"
 
 [tool.setuptools.packages.find]
 include = ["relational_memory*"]

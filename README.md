@@ -50,7 +50,7 @@ The full A/B transcript (fictionalized persona, real dynamics): [ab_test.md](doc
 ## Try It
 
 ```bash
-pip install git+https://github.com/spectator81-png/relational-memory.git
+pip install relational-memory[anthropic]
 export ANTHROPIC_API_KEY=sk-ant-...
 relational-memory
 ```
@@ -61,12 +61,24 @@ Chat for a few sessions. After ~2 sessions the tone starts adapting. After 5, th
 
 Options:
 ```bash
-relational-memory --mode flat      # no memory (A/B comparison)
+relational-memory --mode flat       # no memory (A/B comparison)
 relational-memory --user alex       # separate memory per user
-relational-memory --provider openai # use GPT-4o instead
+relational-memory --provider openai  # use GPT-4o instead
+relational-memory --provider google  # use Gemini instead
+relational-memory --provider local   # use local model (Ollama etc.)
 ```
 
-For OpenAI provider: `pip install openai`. No other dependencies.
+### Install with your preferred provider
+
+```bash
+pip install relational-memory[anthropic]  # Claude (default)
+pip install relational-memory[openai]     # GPT-4o / GPT-4o-mini
+pip install relational-memory[google]     # Gemini
+pip install relational-memory[all]        # all providers
+pip install relational-memory             # core only (bring your own SDK)
+```
+
+The core library has zero dependencies — provider SDKs are optional. Install what you need.
 
 ## What Happens Over Time
 
@@ -125,13 +137,12 @@ The key insight: **the model calibrates itself**. After each session, an LLM-as-
 
 ## What This Is (and Isn't)
 
-This is a **prototype**. It works, it's tested, and the effect is real — but it's honest to name the limits:
+This is a **working prototype** (v2.1). It's tested with 2 independent testers over 16 sessions, and the effect is real — but it's honest to name the limits:
 
-- **Tested with one person over 7 sessions.** The dynamics are real, but n=1. I built this for myself and it works for me. Whether it generalizes is an open question.
-- **~500 lines of Python.** No framework, no database, no infrastructure. Markdown files and JSON. This is intentional — the idea matters more than the engineering.
-- **Requires API calls.** Signal extraction uses a small model (Haiku) after each session. Sleep-time condensation runs every 5 sessions. Both cost fractions of a cent.
-- **No drift detection.** If the relationship vector shifts dramatically (you change, or the model misreads you), there's no automatic correction yet. The EMA is deliberately slow (alpha=0.9) to prevent noise, but it's not the same as catching real drift.
-- **The "resilience" dimension is tricky.** It can come from a healthy place (trust that the relationship survives disagreement) or an unhealthy one (staying because there's no alternative). V1 doesn't distinguish between the two.
+- **Tested with 2 people over 16 sessions total.** The dynamics are real, but n=2. I built this for myself and it works. Whether it generalizes broadly is an open question.
+- **~900 lines of Python.** No framework, no database, no infrastructure. Markdown files and JSON. This is intentional — the idea matters more than the engineering.
+- **Requires API calls.** Signal extraction uses a small model (Haiku/Mini/Flash) after each session. Sleep-time condensation runs every 5 sessions. Both cost fractions of a cent.
+- **4 LLM providers.** Anthropic (Claude), OpenAI (GPT-4o), Google (Gemini), and any OpenAI-compatible local model (Ollama, llama.cpp, vLLM).
 
 ## The Idea Behind It
 
@@ -170,15 +181,18 @@ Each dimension maps directly to a behavioral decision the AI makes every turn: f
 ## Project Structure
 
 ```
-relational_memory/        # library package (~500 lines)
-  __init__.py             # public API
+relational_memory/        # library package (~900 lines)
+  __init__.py             # public API (24 exports)
   __main__.py             # CLI entry point
-  vector.py               # 7D EMA vector
-  llm.py                  # Anthropic + OpenAI, streaming
-  signals.py              # signal extraction via LLM-as-judge
-  layers.py               # three-layer markdown storage
-  context.py              # layers + vector → system prompt
-  sleep.py                # sleep-time condensation
+  vector.py               # 7D EMA vector, dual-alpha
+  llm.py                  # 4 providers: Anthropic, OpenAI, Google, Local
+  signals.py              # signal extraction v2 via LLM-as-judge
+  layers.py               # three-layer markdown storage with versioning
+  context.py              # layers + vector + drift warnings → system prompt
+  sleep.py                # sleep-time condensation with versioned backup
+  drift.py                # drift detection and baseline tracking
+  truncation.py           # sliding-window message truncation
+  storage.py              # secure file I/O with filesystem permissions
   prompts/                # LLM prompts (signal extraction, context template, condensation)
 docs/
   ab_test.md              # full A/B transcript (fictionalized)

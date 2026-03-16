@@ -1,5 +1,7 @@
 """Relational Memory — a relationship-aware memory layer for LLM chatbots."""
 
+__version__ = "2.1.0"
+
 from .context import assemble_context
 from .layers import LayerStore, LAYER_NAMES, MAX_VERSIONS
 from .llm import LLMClient, LLMConfigError, LLMAuthError, PROVIDERS
