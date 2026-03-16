@@ -62,19 +62,15 @@ The full automatic experience requires either **Claude Code** (plugin) or the **
 
 ### Option A: Claude Code Plugin (recommended)
 
-If you already use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), this is the easiest path. No API key configuration needed — the plugin uses Claude Code's own reasoning.
+If you already use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), this is the easiest path. No API key needed — the plugin uses Claude Code's own reasoning. Everything runs automatically at session end.
 
 ```bash
 pip install relational-memory
-claude --plugin-dir plugin/
+claude plugin marketplace add spectator81-png/relational-memory
+claude plugin install relational-memory@relational-memory-plugins
 ```
 
-The plugin gives you three commands:
-- `/memory-save` — extract relational signals from the current session
-- `/sleep` — condense signal history into narrative layers
-- `/vector` — show current relationship state
-
-See [plugin/README.md](plugin/README.md) for setup details.
+Restart Claude Code, done. Signals are extracted automatically when you end a session. See [plugin/README.md](plugin/README.md) for details.
 
 ### Option B: Standalone CLI
 

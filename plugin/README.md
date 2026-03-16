@@ -14,23 +14,15 @@ No separate API key needed. The plugin uses Claude Code's own reasoning for ever
 
 ## Installation
 
-### 1. Install the Python package
-
 ```bash
 pip install relational-memory
+claude plugin marketplace add spectator81-png/relational-memory
+claude plugin install relational-memory@relational-memory-plugins
 ```
 
-That's it — no provider extras needed. The plugin uses Claude Code itself for all LLM work.
+Three commands, done. Restart Claude Code to activate.
 
-### 2. Add the plugin to Claude Code
-
-```bash
-claude --plugin-dir /path/to/plugin
-```
-
-Or symlink it into `~/.claude/plugins/`.
-
-### 3. Configure user ID (optional)
+### Configure user ID (optional)
 
 Three options, in priority order:
 
