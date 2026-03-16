@@ -7,8 +7,9 @@ No separate API key needed. The plugin uses Claude Code's own reasoning for ever
 ## What It Does
 
 - **SessionStart**: Loads relationship vector and memory layers, injects context into Claude's system prompt
-- **`/memory-save`**: Extracts relational signals from the current session (7 dimensions), updates the vector via EMA
-- **`/sleep`**: Condenses signal history into three memory layers (Base Tone, Patterns, Anchors)
+- **SessionEnd (automatic)**: Extracts relational signals, updates vector, runs sleep-time condensation when due — zero manual steps needed
+- **`/memory-save`**: Manual override — extract signals mid-session
+- **`/sleep`**: Manual override — force layer condensation
 - **`/vector`**: Shows current relationship state, layers, and drift warnings
 
 ## Installation
@@ -49,20 +50,25 @@ user: alex
 
 ## Usage
 
-### Normal workflow
+### Normal workflow (fully automatic)
 
-1. Start a session → plugin automatically loads relationship context
+1. Start a session → plugin loads relationship context
 2. Work/chat normally
-3. At the end: `/memory-save` → signals are extracted, vector updated
-4. Every 5 sessions: `/sleep` → layers are condensed
+3. End the session → plugin automatically extracts signals, updates vector, and runs sleep-time if due
 
-### Commands
+That's it. No manual commands needed.
+
+### First-time calibration
+
+The first 3-5 sessions are a calibration phase. The vector starts at neutral (0.5) and converges toward your actual communication style via EMA. Layers are first created at session #5 (first sleep-time). Expect noticeable adaptation from session 2 onwards.
+
+### Manual overrides
 
 | Command | Description |
 |---------|------------|
-| `/memory-save` | Extract signals + update vector |
-| `/sleep` | Sleep-time condensation into layers |
-| `/vector` | Show current state |
+| `/memory-save` | Force signal extraction mid-session (auto-save skips if already done) |
+| `/sleep` | Force layer condensation outside the regular 5-session cycle |
+| `/vector` | Show current vector, layers, and drift warnings |
 
 ## How It Works (No Separate API Key)
 
@@ -79,9 +85,9 @@ This means: if you can run Claude Code, you can run this plugin. No API keys, no
 ```
 Plugin
 ├── SessionStart Hook → session_start.py → systemMessage (context injection)
-├── Stop Hook (prompt) → reminds about /memory-save
-├── /memory-save → Claude analyzes → temp_signals.json → update_vector.py
-├── /sleep → sleep_read.py → Claude condenses → sleep_write.py
+├── Stop Hook (prompt) → auto_save.md → signal extraction + vector update + auto-sleep
+├── /memory-save → Claude analyzes → temp_signals.json → update_vector.py (manual override)
+├── /sleep → sleep_read.py → Claude condenses → sleep_write.py (manual override)
 └── /vector → show_vector.py → vector + layers + drift
 ```
 

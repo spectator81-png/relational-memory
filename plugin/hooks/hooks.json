@@ -1,5 +1,5 @@
 {
-  "description": "Relational Memory — loads relationship context at session start, reminds about signal saving at stop",
+  "description": "Relational Memory — loads relationship context at session start, auto-saves signals at stop",
   "hooks": {
     "SessionStart": [
       {
@@ -11,8 +11,8 @@
     "Stop": [
       {
         "type": "prompt",
-        "prompt": "The Relational Memory plugin is active. If this conversation included meaningful exchange (5+ back-and-forth messages) and the user hasn't run /relational-memory:memory-save in this session, mention ONCE: 'Tipp: /memory-save speichert die relationalen Signale dieser Session.' Do not repeat this if you've already mentioned it. Do not mention it for trivial sessions (quick questions, single commands).",
-        "timeout": 10
+        "prompt": "Read and follow the auto-save instructions: use the Read tool to read ${CLAUDE_PLUGIN_ROOT}/prompts/auto_save.md, then execute every step described there.",
+        "timeout": 120
       }
     ]
   }

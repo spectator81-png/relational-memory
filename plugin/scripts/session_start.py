@@ -41,7 +41,7 @@ def main():
     if vector.session_count == 0 and not layers.is_initialized():
         context = (
             "Relational Memory aktiv (erste Session). "
-            "Noch kein Beziehungskontext vorhanden — dieser wird nach /memory-save aufgebaut. "
+            "Noch kein Beziehungskontext vorhanden — wird automatisch am Session-Ende aufgebaut. "
             "Kommuniziere natürlich, die Signale werden am Ende extrahiert."
         )
         result = {

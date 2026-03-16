@@ -123,10 +123,10 @@ def main():
     if stuck:
         print(f"\n  \u26a0 STUCK: {', '.join(stuck)} variieren kaum \u2014 Prompt-Bias?")
 
-    # Sleep-time reminder
+    # Sleep-time reminder (AUTOSLEEP_DUE marker for auto_save.md)
     if should_condense(vector.session_count):
+        print(f"\nAUTOSLEEP_DUE=true")
         print(f"\n  \u2728 Session #{vector.session_count} \u2014 Sleep-Time f\u00e4llig!")
-        print(f"  F\u00fchre /sleep aus um die Layers zu verdichten.")
 
 
 if __name__ == "__main__":
