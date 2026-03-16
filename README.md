@@ -49,6 +49,17 @@ The full A/B transcript (fictionalized persona, real dynamics): [ab_test.md](doc
 
 ## Try It
 
+### Where it works
+
+The full automatic experience requires either **Claude Code** (plugin) or the **standalone CLI** (API key). No other platform currently supports the hook-based architecture that makes this seamless — Claude Desktop, ChatGPT, Cursor, and other tools lack the automatic session-start context injection that's core to the experience.
+
+| Path | What you need | Automation |
+|---|---|---|
+| **Claude Code Plugin** | Claude Code subscription | Full — context loads automatically, `/memory-save` and `/sleep` as commands |
+| **Standalone CLI** | API key (Anthropic, OpenAI, Google, or local) | Full — built-in chat with automatic signal extraction |
+| Claude Desktop + MCP | Claude Pro/Free + MCP server | Partial — tools available but no automatic context loading |
+| Other tools | — | Not supported |
+
 ### Option A: Claude Code Plugin (recommended)
 
 If you already use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), this is the easiest path. No API key configuration needed — the plugin uses Claude Code's own reasoning.
