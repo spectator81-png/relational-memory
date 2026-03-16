@@ -115,6 +115,14 @@ The core library has zero dependencies — provider SDKs are optional. Install w
 
 **Session 6+:** The bot now has both the vector AND the narrative context. It doesn't just know you're informal (formality: 0.36) — it knows that "when AI gets intellectually shallow, you push back with sharper questions" and that "you show vulnerability without treating it as weakness." That's what makes the difference in the [A/B test](docs/ab_test.md).
 
+### Visualization
+
+Run `python visualize.py --user <id>` to see your relationship data as an interactive dashboard:
+
+![Visualization Demo](docs/visualization_demo.png)
+
+Radar chart, dimension bars with session-over-session deltas, memory layers, signal timeline (raw/EMA/both), and expandable session details with evidence. Supports multi-user comparison (`--user alice bob`).
+
 ## How It Works
 
 ```
