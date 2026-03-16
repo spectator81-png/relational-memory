@@ -8,6 +8,7 @@ Testdokumentation für den Relational Memory Prototyp. Jeder Tester hat einen ei
 |--------|--------|----------|----------|------------|
 | [Florian](florian/) | Erwachsener, Entwickler des Systems | 7 relational + 1 flat | 2026-03-13 | Erste Validierung, A/B-Test, Sleep-Time-Layers |
 | [Max](max/) | Teenager, keine Vorkenntnisse | 6 relational + 3 flat | 2026-03-14 | Zweiter unabhängiger Tester, Dialektanpassung, Warmth-Bug entdeckt |
+| [Plugin Live](plugin_live/) | Claude Code Plugin v1.0 | — | 2026-03-16 | Live-Test aller Hooks + Commands gegen echte Daten + API |
 
 ## Methodik
 
@@ -29,6 +30,8 @@ testing/
     analyse.md               — Vollständige Analyse: Session-für-Session, Signale, A/B-Vergleich, Bugs, Vorschläge
     feedback.md              — Kurzes qualitatives Feedback nach dem Test
     chat_raw.txt             — Rohes Chat-Log (PowerShell-Output, NICHT veröffentlichen — enthält API-Key-Setup)
+  plugin_live/
+    test_report.md           — Live-Test Claude Code Plugin v1.0: SessionStart, /vector, /memory-save, /sleep
 ```
 
 ## Konsolidierte Erkenntnisse (beide Tester)

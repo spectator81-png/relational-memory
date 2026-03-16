@@ -1,0 +1,19 @@
+{
+  "description": "Relational Memory — loads relationship context at session start, reminds about signal saving at stop",
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "python \"${CLAUDE_PLUGIN_ROOT}/scripts/session_start.py\"",
+        "timeout": 15
+      }
+    ],
+    "Stop": [
+      {
+        "type": "prompt",
+        "prompt": "The Relational Memory plugin is active. If this conversation included meaningful exchange (5+ back-and-forth messages) and the user hasn't run /relational-memory:memory-save in this session, mention ONCE: 'Tipp: /memory-save speichert die relationalen Signale dieser Session.' Do not repeat this if you've already mentioned it. Do not mention it for trivial sessions (quick questions, single commands).",
+        "timeout": 10
+      }
+    ]
+  }
+}

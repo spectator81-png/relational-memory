@@ -1,0 +1,12 @@
+{
+  "name": "relational-memory",
+  "version": "1.0.0",
+  "description": "Relationship-aware memory for Claude Code — tracks communication style, builds relational context across sessions",
+  "author": {
+    "name": "Florian Keusch",
+    "email": "florian@keusch.wien"
+  },
+  "repository": "https://github.com/spectator81-png/relational-memory",
+  "license": "Big Time Public License 2.0.1",
+  "keywords": ["memory", "relational", "context", "personality", "ema-vector"]
+}
