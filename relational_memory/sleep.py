@@ -1,12 +1,16 @@
 """Sleep-time condensation agent — periodically distills signals into layers."""
 
 import json
+import logging
 from pathlib import Path
 
 from .layers import LayerStore
 from .llm import LLMClient
-from .signals import load_signal_log
+from .signals import load_signal_log, _parse_llm_json
+from .storage import secure_write_json
 from .vector import RelationalVector
+
+logger = logging.getLogger(__name__)
 
 CONDENSATION_INTERVAL = 5  # Every 5 sessions
 PROMPT_PATH = Path(__file__).parent / "prompts" / "condensation.md"
@@ -23,9 +27,11 @@ def condense(signal_log_path: Path, layers: LayerStore,
 
     Reads the signal log, sends it + current layers to the LLM,
     writes updated layers, and trims the signal log.
+    Creates a timestamped version backup before overwriting.
     """
     signal_log = load_signal_log(signal_log_path)
     if not signal_log:
+        logger.info("Empty signal log — skipping condensation")
         return
 
     prompt_template = PROMPT_PATH.read_text(encoding="utf-8")
@@ -60,19 +66,27 @@ def condense(signal_log_path: Path, layers: LayerStore,
         "Do NOT explain your analysis. Output valid JSON only, nothing else."
     )
 
+    # Versioned backup before overwriting (replaces simple .bak)
+    version_id = layers.save_version(label="pre-condensation")
+    if version_id:
+        print(f"  [Sleep-Time] Version gesichert: {version_id}")
+
     print("\n  [Sleep-Time] Running condensation...")
     raw = llm.extract(system=system_part, user_prompt=user_part)
 
-    # Parse response — handle markdown fences and embedded JSON
-    text = raw.strip()
-    if text.startswith("```"):
-        text = text.split("\n", 1)[1]
-        text = text.rsplit("```", 1)[0]
-    elif "{" in text:
-        # Extract JSON from surrounding text
-        text = text[text.index("{"):text.rindex("}") + 1]
-
-    result = json.loads(text)
+    # Parse response
+    try:
+        result = _parse_llm_json(raw)
+    except ValueError as e:
+        logger.error("Sleep-time condensation returned invalid JSON: %s", e)
+        # Restore from version backup
+        if version_id:
+            try:
+                restored = layers.restore_version(version_id)
+                print(f"  [Sleep-Time] FEHLER: {restored} Layer(s) aus Version {version_id} wiederhergestellt")
+            except FileNotFoundError:
+                print("  [Sleep-Time] FEHLER: Konnte Layers nicht wiederherstellen")
+        raise
 
     # Write updated layers
     if "base_tone" in result and result["base_tone"]:
@@ -90,9 +104,7 @@ def condense(signal_log_path: Path, layers: LayerStore,
     # Trim signal log (keep last N entries)
     if len(signal_log) > MAX_SIGNAL_LOG_ENTRIES:
         signal_log = signal_log[-MAX_SIGNAL_LOG_ENTRIES:]
-        signal_log_path.write_text(
-            json.dumps(signal_log, indent=2, ensure_ascii=False), encoding="utf-8"
-        )
+        secure_write_json(signal_log_path, signal_log)
         print(f"  [Sleep-Time] Signal log trimmed to {MAX_SIGNAL_LOG_ENTRIES} entries")
 
     print("  [Sleep-Time] Condensation complete.\n")

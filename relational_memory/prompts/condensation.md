@@ -13,6 +13,18 @@ A distilled portrait of who this person is in this relationship. Write it like a
 ## Layer 2: Patterns (changes over weeks)
 Active if-then patterns learned from implicit feedback. Max 10 patterns. Format: "When X → Y". Drop patterns that the signal log no longer supports. Add new ones that emerge. These should be actionable — things the AI can use to adjust behavior in real-time.
 
+IMPORTANT: Always include a language/dialect pattern if detectable. Examples:
+- "User writes in Austrian German dialect → respond in Austrian German, not Hochdeutsch"
+- "User writes in English → respond in English"
+- "User mixes German and English → match their code-switching pattern"
+This ensures the AI uses the right language from the first message in the next session.
+
+IMPORTANT: If the signal log contains resilience entries with a "type" field, include a resilience pattern that captures the type:
+- "Resilience is relationship-based → user stays through friction because the relationship can handle it"
+- "Resilience appears dependency-based → user stays but not because of trust — be cautious with pushback"
+- "Resilience untested → no real disagreements yet, don't assume high tolerance"
+This distinction is critical — dependency-based resilience should NOT be treated as genuine comfort with conflict.
+
 ## Layer 3: Anchors (few, stay long)
 Moments that shifted the relationship. Max 10. Only add a new one if the signal log shows a clear shift (e.g., a dimension jumping >0.2 between sessions). Format: brief description + what changed. Remove none unless clearly irrelevant.
 

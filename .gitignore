@@ -9,12 +9,19 @@ build/
 
 # Private data — never commit
 test_conversations/
+testing/max/
+testing/florian/
 AB_TEST_RAW.md
 AB_TEST_PUBLIC.md
 SESSION_LOG.md
 SIGNAL_EXTRACTION_TEST.md
 KALIBRIERUNG_ERKENNTNISSE.md
 REDDIT_SNIPPETS.md
+REDDIT_POST.md
+REDDIT_POST_LLAMA.md
+
+# Claude Code project config
+.claude/
 
 # Internal dev docs (content lives in README now)
 PROTOTYPE.md
