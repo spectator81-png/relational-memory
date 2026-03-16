@@ -39,9 +39,8 @@ def main():
             print(APPROVE)
             return
 
-    # If marker exists → we already blocked once, approve now
+    # If marker exists → we already blocked once this session, approve silently
     if marker_path.exists():
-        marker_path.unlink(missing_ok=True)
         print(APPROVE)
         return
 

@@ -4,7 +4,7 @@
 
 ## Vorprüfungen
 
-1. **Triviale Session?** Hatte diese Konversation weniger als 3 sinnvolle Nachrichten-Wechsel (User→Assistant)? Dann: Gib aus "Session zu kurz für Signal-Extraktion — übersprungen." und STOPP.
+1. **Triviale Session?** Hatte diese Konversation weniger als 5 sinnvolle Nachrichten-Wechsel (User→Assistant)? Dann: Gib aus "Session zu kurz für Signal-Extraktion — übersprungen." und STOPP.
 2. **Schon gespeichert?** Wurde `/memory-save` bereits in dieser Session ausgeführt? (Erkennbar daran, dass Signal-Extraktion + Vektor-Update schon im Gesprächsverlauf stattfanden.) Dann: Gib aus "Signale wurden bereits manuell gespeichert." und STOPP.
 
 ## Phase 1: Signal-Extraktion
