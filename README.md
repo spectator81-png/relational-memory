@@ -173,6 +173,7 @@ This is a **working prototype** (v2.1). It's tested with 2 independent testers o
 - **Requires API calls (for standalone CLI).** Signal extraction uses a small model (Haiku/Mini/Flash) after each session. Sleep-time condensation runs every 5 sessions. Both cost fractions of a cent. The Claude Code plugin needs no separate API key.
 - **4 LLM providers.** Anthropic (Claude), OpenAI (GPT-4o), Google (Gemini), and any OpenAI-compatible local model (Ollama, llama.cpp, vLLM).
 - **Local models: untested.** The `--provider local` path works technically, but signal extraction (LLM-as-Judge with structured JSON output) likely needs 70B+ parameters for reliable results. 13B models may produce undifferentiated scores or invalid JSON. This is an open research question — we've only validated with cloud models so far. If you test it locally, we'd love to hear your results.
+- **Only tested with conversational sessions.** The A/B tests used philosophical, personal, and emotional conversations. Whether the 7 dimensions produce useful signal during coding sessions (where formality, warmth, and humor barely move) is an open question. The plugin *might* help Claude Code learn your working style — but we haven't validated that yet, and the dimensions may need adaptation for coding contexts.
 
 ## The Idea Behind It
 
