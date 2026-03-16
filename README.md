@@ -49,31 +49,6 @@ The full A/B transcript (fictionalized persona, real dynamics): [ab_test.md](doc
 
 ## Try It
 
-### Where it works
-
-The full automatic experience requires either **Claude Code** (plugin) or the **standalone CLI** (API key). No other platform currently supports the hook-based architecture that makes this seamless — Claude Desktop, ChatGPT, Cursor, and other tools lack the automatic session-start context injection that's core to the experience.
-
-| Path | What you need | Automation |
-|---|---|---|
-| **Claude Code Plugin** (experimental) | Claude Code subscription | Partial — context loads automatically, signal extraction via `/memory-save` (manual) |
-| **Standalone CLI** | API key (Anthropic, OpenAI, Google, or local) | Full — built-in chat with automatic signal extraction |
-| Claude Desktop + MCP | Claude Pro/Free + MCP server | Partial — tools available but no automatic context loading |
-| Other tools | — | Not supported |
-
-### Option A: Claude Code Plugin (recommended)
-
-If you already use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), context loading is automatic. Signal extraction requires manual `/memory-save` — auto-save is [blocked by a platform limitation](https://github.com/anthropics/claude-code/issues/34954).
-
-```bash
-pip install relational-memory
-claude plugin marketplace add spectator81-png/relational-memory
-claude plugin install relational-memory@relational-memory-plugins
-```
-
-Restart Claude Code. Context loads automatically at session start, run `/memory-save` before ending. See [plugin/README.md](plugin/README.md) for details.
-
-### Option B: Standalone CLI
-
 ```bash
 pip install relational-memory[anthropic]
 export ANTHROPIC_API_KEY=sk-ant-...
@@ -170,14 +145,14 @@ The key insight: **the model calibrates itself**. After each session, an LLM-as-
 
 ## What This Is (and Isn't)
 
-This is a **working prototype** (v2.1). It's tested with 2 independent testers over 16 sessions, and the effect is real — but it's honest to name the limits:
+This is a **working prototype** (v2.1). It's tested with 2 testers over 16 sessions, and the effect is real — but it's honest to name the limits:
 
 - **Tested with 2 people over 16 sessions total.** The dynamics are real, but n=2. I built this for myself and it works. Whether it generalizes broadly is an open question.
 - **~900 lines of Python.** No framework, no database, no infrastructure. Markdown files and JSON. This is intentional — the idea matters more than the engineering.
-- **Requires API calls (for standalone CLI).** Signal extraction uses a small model (Haiku/Mini/Flash) after each session. Sleep-time condensation runs every 5 sessions. Both cost fractions of a cent. The Claude Code plugin needs no separate API key.
+- **Requires API calls.** Signal extraction uses a small model (Haiku/Mini/Flash) after each session. Sleep-time condensation runs every 5 sessions. Both cost fractions of a cent.
 - **4 LLM providers.** Anthropic (Claude), OpenAI (GPT-4o), Google (Gemini), and any OpenAI-compatible local model (Ollama, llama.cpp, vLLM).
 - **Local models: untested.** The `--provider local` path works technically, but signal extraction (LLM-as-Judge with structured JSON output) likely needs 70B+ parameters for reliable results. 13B models may produce undifferentiated scores or invalid JSON. This is an open research question — we've only validated with cloud models so far. If you test it locally, we'd love to hear your results.
-- **Only tested with conversational sessions.** The A/B tests used philosophical, personal, and emotional conversations. Whether the 7 dimensions produce useful signal during coding sessions (where formality, warmth, and humor barely move) is an open question. The plugin *might* help Claude Code learn your working style — but we haven't validated that yet, and the dimensions may need adaptation for coding contexts.
+- **Only tested with conversational sessions.** The A/B tests used philosophical, personal, and emotional conversations. Whether the 7 dimensions produce useful signal during coding sessions (where formality, warmth, and humor barely move) is an open question.
 
 ## The Idea Behind It
 
@@ -229,13 +204,7 @@ relational_memory/        # library package (~900 lines)
   truncation.py           # sliding-window message truncation
   storage.py              # secure file I/O with filesystem permissions
   prompts/                # LLM prompts (signal extraction, context template, condensation)
-plugin/                   # Claude Code plugin (no API key needed)
-  .claude-plugin/         # plugin manifest
-  hooks/                  # SessionStart + Stop hooks
-  commands/               # /memory-save, /sleep, /vector
-  scripts/                # Python helpers for file I/O and EMA math
-  prompts/                # bundled signal extraction prompt
-  skills/                 # background context skill
+plugin/                   # Claude Code plugin (on hold — waiting for SessionEnd hook)
 docs/
   ab_test.md              # full A/B transcript (fictionalized)
 ```
