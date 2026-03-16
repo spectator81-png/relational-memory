@@ -159,8 +159,9 @@ This is a **working prototype** (v2.1). It's tested with 2 independent testers o
 
 - **Tested with 2 people over 16 sessions total.** The dynamics are real, but n=2. I built this for myself and it works. Whether it generalizes broadly is an open question.
 - **~900 lines of Python.** No framework, no database, no infrastructure. Markdown files and JSON. This is intentional — the idea matters more than the engineering.
-- **Requires API calls.** Signal extraction uses a small model (Haiku/Mini/Flash) after each session. Sleep-time condensation runs every 5 sessions. Both cost fractions of a cent.
+- **Requires API calls (for standalone CLI).** Signal extraction uses a small model (Haiku/Mini/Flash) after each session. Sleep-time condensation runs every 5 sessions. Both cost fractions of a cent. The Claude Code plugin needs no separate API key.
 - **4 LLM providers.** Anthropic (Claude), OpenAI (GPT-4o), Google (Gemini), and any OpenAI-compatible local model (Ollama, llama.cpp, vLLM).
+- **Local models: untested.** The `--provider local` path works technically, but signal extraction (LLM-as-Judge with structured JSON output) likely needs 70B+ parameters for reliable results. 13B models may produce undifferentiated scores or invalid JSON. This is an open research question — we've only validated with cloud models so far. If you test it locally, we'd love to hear your results.
 
 ## The Idea Behind It
 
