@@ -1,16 +1,17 @@
-# Relational Memory — Claude Code Plugin
+# Relational Memory — Claude Code Plugin (Experimental)
 
 Claude Code plugin that builds relationship memory across sessions. Instead of storing facts about you, it models the relationship dynamic — how you two communicate.
 
 No separate API key needed. The plugin uses Claude Code's own reasoning for everything.
 
+> **Status: Experimental.** Auto-save at session end is not possible because Claude Code's `Stop` hook fires after every turn, not at session close. Signal extraction requires manual `/memory-save`. We've filed a [feature request](https://github.com/anthropics/claude-code/issues/34954) for a `SessionEnd` hook. Once available, auto-save becomes a one-line fix.
+
 ## What It Does
 
-- **SessionStart**: Loads relationship vector and memory layers, injects context into Claude's system prompt
-- **SessionEnd (automatic)**: Extracts relational signals, updates vector, runs sleep-time condensation when due — zero manual steps needed
-- **`/memory-save`**: Manual override — extract signals mid-session
-- **`/sleep`**: Manual override — force layer condensation
-- **`/vector`**: Shows current relationship state, layers, and drift warnings
+- **SessionStart (automatic)**: Loads relationship vector and memory layers, injects context into Claude's system prompt
+- **`/memory-save`**: Extract relational signals from the current session, update the vector
+- **`/sleep`**: Condense signal history into three memory layers (Base Tone, Patterns, Anchors)
+- **`/vector`**: Show current relationship state, layers, and drift warnings
 
 ## Installation
 
@@ -42,24 +43,21 @@ user: alex
 
 ## Usage
 
-### Normal workflow (fully automatic)
-
-1. Start a session → plugin loads relationship context
+1. Start a session — plugin automatically loads relationship context
 2. Work/chat normally
-3. End the session → plugin automatically extracts signals, updates vector, and runs sleep-time if due
-
-That's it. No manual commands needed.
+3. Before ending: `/memory-save` — signals are extracted, vector updated
+4. Every 5 sessions: `/sleep` — layers are condensed
 
 ### First-time calibration
 
 The first 3-5 sessions are a calibration phase. The vector starts at neutral (0.5) and converges toward your actual communication style via EMA. Layers are first created at session #5 (first sleep-time). Expect noticeable adaptation from session 2 onwards.
 
-### Manual overrides
+### Commands
 
 | Command | Description |
 |---------|------------|
-| `/memory-save` | Force signal extraction mid-session (auto-save skips if already done) |
-| `/sleep` | Force layer condensation outside the regular 5-session cycle |
+| `/memory-save` | Extract signals + update vector |
+| `/sleep` | Sleep-time condensation into layers |
 | `/vector` | Show current vector, layers, and drift warnings |
 
 ## How It Works (No Separate API Key)
@@ -77,11 +75,14 @@ This means: if you can run Claude Code, you can run this plugin. No API keys, no
 ```
 Plugin
 ├── SessionStart Hook → session_start.py → systemMessage (context injection)
-├── Stop Hook (prompt) → auto_save.md → signal extraction + vector update + auto-sleep
-├── /memory-save → Claude analyzes → temp_signals.json → update_vector.py (manual override)
-├── /sleep → sleep_read.py → Claude condenses → sleep_write.py (manual override)
+├── /memory-save → Claude analyzes → temp_signals.json → update_vector.py
+├── /sleep → sleep_read.py → Claude condenses → sleep_write.py
 └── /vector → show_vector.py → vector + layers + drift
 ```
+
+## Why No Auto-Save?
+
+Claude Code's `Stop` hook fires after every assistant turn, not at session end. This makes reliable auto-save impossible — it either fires mid-session (disruptive) or creates loops. A proper `SessionEnd` event would fix this. [Feature request filed.](https://github.com/anthropics/claude-code/issues/34954)
 
 ## Storage
 

@@ -1,5 +1,5 @@
 {
-  "description": "Relational Memory — loads relationship context at session start, auto-saves signals at stop",
+  "description": "Relational Memory — loads relationship context at session start",
   "hooks": {
     "SessionStart": [
       {
@@ -8,17 +8,6 @@
             "type": "command",
             "command": "python \"${CLAUDE_PLUGIN_ROOT}/scripts/session_start.py\"",
             "timeout": 15
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python \"${CLAUDE_PLUGIN_ROOT}/scripts/stop_hook.py\"",
-            "timeout": 10
           }
         ]
       }

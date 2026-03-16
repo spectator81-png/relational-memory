@@ -55,14 +55,14 @@ The full automatic experience requires either **Claude Code** (plugin) or the **
 
 | Path | What you need | Automation |
 |---|---|---|
-| **Claude Code Plugin** | Claude Code subscription | Full — context loads automatically, `/memory-save` and `/sleep` as commands |
+| **Claude Code Plugin** (experimental) | Claude Code subscription | Partial — context loads automatically, signal extraction via `/memory-save` (manual) |
 | **Standalone CLI** | API key (Anthropic, OpenAI, Google, or local) | Full — built-in chat with automatic signal extraction |
 | Claude Desktop + MCP | Claude Pro/Free + MCP server | Partial — tools available but no automatic context loading |
 | Other tools | — | Not supported |
 
 ### Option A: Claude Code Plugin (recommended)
 
-If you already use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), this is the easiest path. No API key needed — the plugin uses Claude Code's own reasoning. Everything runs automatically at session end.
+If you already use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), context loading is automatic. Signal extraction requires manual `/memory-save` — auto-save is [blocked by a platform limitation](https://github.com/anthropics/claude-code/issues/34954).
 
 ```bash
 pip install relational-memory
@@ -70,7 +70,7 @@ claude plugin marketplace add spectator81-png/relational-memory
 claude plugin install relational-memory@relational-memory-plugins
 ```
 
-Restart Claude Code, done. Signals are extracted automatically when you end a session. See [plugin/README.md](plugin/README.md) for details.
+Restart Claude Code. Context loads automatically at session start, run `/memory-save` before ending. See [plugin/README.md](plugin/README.md) for details.
 
 ### Option B: Standalone CLI
 
