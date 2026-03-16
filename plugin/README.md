@@ -1,126 +1,126 @@
 # Relational Memory — Claude Code Plugin
 
-Claude Code Plugin das Beziehungsgedächtnis über Sessions hinweg aufbaut. Statt nur Fakten über den User zu speichern, modelliert es die Beziehungsdynamik — wie ihr miteinander kommuniziert.
+Claude Code plugin that builds relationship memory across sessions. Instead of storing facts about you, it models the relationship dynamic — how you two communicate.
 
-## Was es tut
+No separate API key needed. The plugin uses Claude Code's own reasoning for everything.
 
-- **SessionStart**: Lädt den Beziehungsvektor und Memory-Layers, injiziert Kontext in Claudes System-Prompt
-- **`/memory-save`**: Extrahiert relationale Signale aus der aktuellen Session (7 Dimensionen), aktualisiert den Vektor via EMA
-- **`/sleep`**: Verdichtet die Signal-History in drei Memory-Layers (Base Tone, Patterns, Anchors)
-- **`/vector`**: Zeigt den aktuellen Beziehungszustand, Layers und Drift-Warnungen
+## What It Does
+
+- **SessionStart**: Loads relationship vector and memory layers, injects context into Claude's system prompt
+- **`/memory-save`**: Extracts relational signals from the current session (7 dimensions), updates the vector via EMA
+- **`/sleep`**: Condenses signal history into three memory layers (Base Tone, Patterns, Anchors)
+- **`/vector`**: Shows current relationship state, layers, and drift warnings
 
 ## Installation
 
-### 1. Python-Package installieren
+### 1. Install the Python package
 
 ```bash
 pip install relational-memory
-
-# Für Sleep-Time (Haiku-LLM-Call):
-pip install relational-memory[anthropic]
 ```
 
-### 2. Plugin einbinden
+That's it — no provider extras needed. The plugin uses Claude Code itself for all LLM work.
 
-Das Plugin-Verzeichnis in Claude Code referenzieren:
+### 2. Add the plugin to Claude Code
 
 ```bash
-claude --plugin-dir /pfad/zu/plugin
+claude --plugin-dir /path/to/plugin
 ```
 
-Oder als Symlink in `~/.claude/plugins/` ablegen.
+Or symlink it into `~/.claude/plugins/`.
 
-### 3. User-ID konfigurieren (optional)
+### 3. Configure user ID (optional)
 
-Drei Möglichkeiten, Priorität von oben nach unten:
+Three options, in priority order:
 
-**a) Umgebungsvariable:**
+**a) Environment variable:**
 ```bash
-export RELATIONAL_MEMORY_USER=florian
+export RELATIONAL_MEMORY_USER=alex
 ```
 
-**b) Config-Datei** (`.claude/relational-memory.local.md` im Projekt oder `~/.claude/`):
+**b) Config file** (`.claude/relational-memory.local.md` in project or `~/.claude/`):
 ```markdown
 ---
-user: florian
+user: alex
 ---
 ```
 
-**c) Default:** Ohne Konfiguration wird `default` als User-ID verwendet.
+**c) Default:** Without configuration, `default` is used as user ID.
 
-### 4. API-Key (nur für /sleep)
+## Usage
 
-```bash
-export ANTHROPIC_API_KEY=sk-ant-...
-```
+### Normal workflow
 
-Nur nötig für `/sleep` (Sleep-Time-Condensation via Haiku). Die Signal-Extraktion (`/memory-save`) braucht keinen separaten Key — Claude analysiert direkt.
-
-## Verwendung
-
-### Normaler Workflow
-
-1. Session starten → Plugin lädt automatisch den Beziehungskontext
-2. Normal arbeiten/chatten
-3. Am Ende: `/memory-save` → Signale werden extrahiert, Vektor aktualisiert
-4. Alle 5 Sessions: `/sleep` → Layers werden verdichtet
+1. Start a session → plugin automatically loads relationship context
+2. Work/chat normally
+3. At the end: `/memory-save` → signals are extracted, vector updated
+4. Every 5 sessions: `/sleep` → layers are condensed
 
 ### Commands
 
-| Command | Beschreibung |
-|---------|-------------|
-| `/memory-save` | Signale extrahieren + Vektor updaten |
-| `/sleep` | Sleep-Time-Verdichtung (braucht API-Key) |
-| `/vector` | Aktuellen Zustand anzeigen |
+| Command | Description |
+|---------|------------|
+| `/memory-save` | Extract signals + update vector |
+| `/sleep` | Sleep-time condensation into layers |
+| `/vector` | Show current state |
 
-## Storage
+## How It Works (No Separate API Key)
 
-Alles in `~/.relational_memory/<user_id>/`:
+The key design decision: **Claude Code does all the thinking.**
 
-```
-~/.relational_memory/florian/
-├── vector.json           # 7D EMA-Vektor
-├── signal_log.json       # Signal-History (max 20 Einträge)
-├── layers/
-│   ├── base_tone.md      # Destilliertes Beziehungsbild
-│   ├── patterns.md       # Wenn-dann-Regeln
-│   ├── anchors.md        # Wendepunkte
-│   └── versions/         # Timestamped Backups
-└── temp_signals.json     # Temporär (wird nach Update gelöscht)
-```
+- **Signal extraction** (`/memory-save`): Claude (Opus) analyzes the conversation directly — it's already in context
+- **Sleep-time condensation** (`/sleep`): Claude (Opus) reads the signal log and writes the layers — no separate Haiku call needed
+- **Helper scripts** only handle file I/O (reading data, writing JSON, EMA math)
 
-## Architektur
+This means: if you can run Claude Code, you can run this plugin. No API keys, no provider configuration, no extra cost beyond your normal Claude Code usage.
+
+## Architecture
 
 ```
 Plugin
-├── SessionStart Hook → session_start.py → systemMessage (Kontext-Injection)
-├── Stop Hook (prompt) → erinnert an /memory-save
-├── /memory-save → Claude analysiert → temp_signals.json → update_vector.py
-├── /sleep → run_sleep.py → Library condense() → Haiku
-└── /vector → show_vector.py → Vektor + Layers + Drift
+├── SessionStart Hook → session_start.py → systemMessage (context injection)
+├── Stop Hook (prompt) → reminds about /memory-save
+├── /memory-save → Claude analyzes → temp_signals.json → update_vector.py
+├── /sleep → sleep_read.py → Claude condenses → sleep_write.py
+└── /vector → show_vector.py → vector + layers + drift
 ```
 
-**Design-Entscheidung:** Claude (Opus) macht die Signal-Extraktion direkt — kein separater Haiku-Call nötig. Die Konversation ist bereits im Kontext. Sleep-Time-Condensation nutzt Haiku über die Library.
+## Storage
 
-## 7 Dimensionen
+Everything in `~/.relational_memory/<user_id>/`:
+
+```
+~/.relational_memory/alex/
+├── vector.json           # 7D EMA vector
+├── signal_log.json       # Signal history (max 20 entries)
+├── layers/
+│   ├── base_tone.md      # Distilled relationship portrait
+│   ├── patterns.md       # If-then behavioral rules
+│   ├── anchors.md        # Relationship turning points
+│   └── versions/         # Timestamped backups
+└── temp_signals.json     # Temporary (deleted after update)
+```
+
+## The 7 Dimensions
 
 | Dimension | 0.0 | 1.0 |
 |-----------|-----|-----|
-| Formality | Slang, Dialekt | "Sie", Titel |
-| Warmth | Transaktional | Persönliche Verbindung |
-| Humor | Ernst | Banter |
-| Depth | Aufgabenausführung | Philosophisch |
-| Trust | Reserviert | Verletzlichkeit |
-| Energy | "ok" | Leidenschaftlich |
-| Resilience | Weicht aus | Hitzige Diskussion, produktiv |
+| Formality | Slang, dialect | Formal register |
+| Warmth | Transactional | Personal connection |
+| Humor | Serious | Banter, running jokes |
+| Depth | Task execution | Philosophical |
+| Trust | Guarded | Vulnerability |
+| Energy | "ok" | Passionate |
+| Resilience | Avoids friction | Heated debate, productive |
 
-## Voraussetzungen
+## Requirements
 
 - Python 3.10+
-- `relational-memory` PyPI-Package
+- `relational-memory` package (pip)
 - Claude Code
-- Optional: `ANTHROPIC_API_KEY` für `/sleep`
 
-## Lizenz
+No API keys needed beyond your Claude Code subscription.
+
+## License
 
 Big Time Public License 2.0.1

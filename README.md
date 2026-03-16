@@ -49,6 +49,24 @@ The full A/B transcript (fictionalized persona, real dynamics): [ab_test.md](doc
 
 ## Try It
 
+### Option A: Claude Code Plugin (recommended)
+
+If you already use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), this is the easiest path. No API key configuration needed — the plugin uses Claude Code's own reasoning.
+
+```bash
+pip install relational-memory
+claude --plugin-dir plugin/
+```
+
+The plugin gives you three commands:
+- `/memory-save` — extract relational signals from the current session
+- `/sleep` — condense signal history into narrative layers
+- `/vector` — show current relationship state
+
+See [plugin/README.md](plugin/README.md) for setup details.
+
+### Option B: Standalone CLI
+
 ```bash
 pip install relational-memory[anthropic]
 export ANTHROPIC_API_KEY=sk-ant-...
@@ -194,6 +212,13 @@ relational_memory/        # library package (~900 lines)
   truncation.py           # sliding-window message truncation
   storage.py              # secure file I/O with filesystem permissions
   prompts/                # LLM prompts (signal extraction, context template, condensation)
+plugin/                   # Claude Code plugin (no API key needed)
+  .claude-plugin/         # plugin manifest
+  hooks/                  # SessionStart + Stop hooks
+  commands/               # /memory-save, /sleep, /vector
+  scripts/                # Python helpers for file I/O and EMA math
+  prompts/                # bundled signal extraction prompt
+  skills/                 # background context skill
 docs/
   ab_test.md              # full A/B transcript (fictionalized)
 ```

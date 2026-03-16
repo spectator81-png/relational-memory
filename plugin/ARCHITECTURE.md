@@ -1,6 +1,6 @@
 # Relational Memory — Claude Code Plugin Architecture (Phase 4.1)
 
-> Erstellt: 2026-03-16 | Status: v1.0.0 implementiert
+> Erstellt: 2026-03-16 | Status: v1.1.0 — prompt-based /sleep (no API key needed)
 
 ## Overview
 
@@ -11,7 +11,7 @@ Gibt Claude beziehungsbewussten Kontext über den User — Kommunikationsstil pa
 
 - Python 3.10+
 - `pip install relational-memory` (PyPI Package, v2.1.0)
-- `ANTHROPIC_API_KEY` (optional, nur für `/sleep`)
+- No separate API key needed (Claude Code does all LLM work)
 - `RELATIONAL_MEMORY_USER` (optional, default: "default")
 
 ## Storage
@@ -39,8 +39,10 @@ plugin/
 │   ├── config.py                    # Shared: User-ID, Paths, Dependency-Check
 │   ├── session_start.py             # SessionStart → systemMessage JSON
 │   ├── update_vector.py             # Signale validieren + EMA + speichern
-│   ├── run_sleep.py                 # condense() via Library (Haiku)
-│   └── show_vector.py               # Vektor + Layers + Drift anzeigen
+│   ├── show_vector.py               # Vektor + Layers + Drift anzeigen
+│   ├── sleep_read.py                # Read signal log + layers for /sleep
+│   ├── sleep_write.py               # Write condensation result back to layers
+│   └── run_sleep.py                 # (legacy) condense() via Library (Haiku)
 ├── prompts/
 │   └── signal_extraction.md         # Bundled Extraction-Prompt (für Opus angepasst)
 ├── skills/
@@ -75,15 +77,17 @@ User: /memory-save
   → Output: Signalbalken, Vektor-Änderungen, Sleep-Time-Reminder
 ```
 
-### /sleep (manuell)
+### /sleep (manuell, prompt-basiert — v1.1)
 ```
 User: /sleep
   → commands/sleep.md
-  → Claude ruft Bash: python run_sleep.py
-  → run_sleep.py: LLMClient(anthropic) → condense() → Haiku
-  → Versioned Backup → Layer-Update → Signal-Log trimmen
-  → Output: Vorher/Nachher Layers
+  → Claude ruft Bash: python sleep_read.py → Signal-Log + Layers + Vektor als Text
+  → Claude (Opus) verdichtet selbst → schreibt JSON → Write Tool → temp_condensation.json
+  → Claude ruft Bash: python sleep_write.py → Versioned Backup → Layer-Update → Cleanup
+  → Output: Aktualisierte Layers
 ```
+
+**v1.0 (legacy):** `run_sleep.py` nutzte einen separaten Haiku-Call via Library. Bleibt als Referenz für Nicht-Plugin-Nutzung.
 
 ### Stop Hook (automatisch, prompt-basiert)
 ```
