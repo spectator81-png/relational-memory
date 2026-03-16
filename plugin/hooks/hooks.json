@@ -16,9 +16,9 @@
       {
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "Read and follow the auto-save instructions: use the Read tool to read ${CLAUDE_PLUGIN_ROOT}/prompts/auto_save.md, then execute every step described there.",
-            "timeout": 120
+            "type": "command",
+            "command": "python \"${CLAUDE_PLUGIN_ROOT}/scripts/stop_hook.py\"",
+            "timeout": 10
           }
         ]
       }
