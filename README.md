@@ -1,5 +1,7 @@
 # Relational Memory
 
+### Anti-sycophancy through relationship modeling — not prompting
+
 Memory systems make LLMs remember facts about you. This one models the *relationship* — and uses it to push back when you need it.
 
 ## The Problem
@@ -7,6 +9,16 @@ Memory systems make LLMs remember facts about you. This one models the *relation
 Most AI memory stores information *about* you: your name, your preferences, your past requests. The more it remembers, the better it gets at telling you what you want to hear. Memory makes sycophancy worse, not better.
 
 What's missing is the thing that makes a good friend useful: knowing *how to be with you*. When to push, when to back off, when to call bullshit. That's not a fact you store — it's a relationship you build.
+
+## Why Not Just Prompt Engineering?
+
+You can write "be honest and push back" in a system prompt. Every AI lab has tried it. It doesn't work — and there's a structural reason why.
+
+A static instruction ("be direct") applies equally to every user. But directness that's useful for someone with high resilience is harmful for someone who's fragile. Without knowing the relationship, the model has two options: push everyone equally (and hurt some) or default to safe agreement (sycophancy). It rationally chooses the latter — being wrong and agreeable has lower cost than being wrong and abrasive.
+
+Relational memory breaks this deadlock. The model doesn't just know *that* it should push back — it knows *who* can handle it, *how much*, and *when*. The resilience dimension (one of 7 tracked) gives the model a calibrated confidence level for each specific user. High resilience + high trust = call bullshit. Low resilience = frame challenges as questions.
+
+This is why prompt-level anti-sycophancy interventions plateau. They lack the per-user signal that makes honesty safe.
 
 ## See the Difference
 

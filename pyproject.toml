@@ -12,7 +12,8 @@ authors = [{name = "Florian Keusch", email = "florian@keusch.wien"}]
 readme = "README.md"
 keywords = [
     "llm", "memory", "relationship", "chatbot", "ai",
-    "sycophancy", "ema", "personality", "context",
+    "anti-sycophancy", "sycophancy", "alignment", "ai-safety",
+    "ema", "personality", "context",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
